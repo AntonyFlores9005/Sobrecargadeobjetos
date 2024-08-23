@@ -1,0 +1,236 @@
+#include <iostream>
+#include <windows.h>
+#include <string>
+#include <cstdlib>
+
+class Empleado {
+    private:
+    //Atributos
+    int ClaveEmpleado;
+    std::string Nombre;
+    std::string Domicilio;
+    float Sueldo;
+    std::string ReportaA;
+    protected:    
+    public:
+
+    //Metodos
+    Empleado(int CE, std::string N, std::string Dom, float Sld, std::string URA) {
+        ClaveEmpleado = CE; Nombre = N; Domicilio = Dom; Sueldo = Sld; ReportaA = URA;
+    }
+
+    void SetClave(int CE){ClaveEmpleado=CE;}
+    int getClave(){return ClaveEmpleado;}
+    void SetNombre(std::string N){Nombre=N;}
+    std::string getNombre(){return Nombre;}    
+    void SetDomicilio(std::string Dom){Domicilio=Dom;}
+    std::string getDomicilio(){return Domicilio;}
+    void SetSueldo(float Sld){Sueldo=Sld;}
+    float getSueldo(){return Sueldo;}
+    void SetReportaA(std::string URA){ReportaA=URA;}
+    std::string getReportaA(){return ReportaA;}
+
+    //Sobrecarga << >>
+    friend std::ostream& operator<<(std::ostream& o, const Empleado& e) {
+        o << "Clave de empleado: " << e.ClaveEmpleado << std::endl;
+        o << "Nombre: " << e.Nombre << std::endl;
+        o << "Domicilio: " << e.Domicilio << std::endl;
+        o << "Sueldo: " << e.Sueldo << std::endl;
+        o << "Persona a quien reporta: " << e.ReportaA << std::endl;
+        return o;
+    }
+
+    friend std::istream& operator>>(std::istream& i, Empleado& e) {
+        std::cout << "Ingrese la clave del empleado: ";
+        i >> e.ClaveEmpleado;
+        std::cout << "Ingrese el nombre del empleado: ";
+        i.ignore();
+        std::getline(i, e.Nombre);
+        std::cout << "Ingrese el domicilio del empleado: ";
+        std::getline(i, e.Domicilio);
+        std::cout << "Ingrese el sueldo del empleado: ";
+        i >> e.Sueldo;
+        std::cout << "Ingrese el jefe del empleado: ";
+        i.ignore();
+        std::getline(i, e.ReportaA);
+        return i;
+    }
+
+    //sobrecarga == !=
+    bool operator==(const Empleado& e) const {
+    return this->ClaveEmpleado == e.ClaveEmpleado; 
+    }
+    
+    bool operator!=(const Empleado& e) const {
+    return !(*this == e); 
+    }
+
+    //Sobrecarga + < >
+    Empleado operator+(const Empleado& otroEmpleado) const {
+        return Empleado(0, "", "", this->Sueldo + otroEmpleado.Sueldo, ""); 
+    }
+
+    bool operator<(const Empleado& otroEmpleado) const {
+        return this->Sueldo < otroEmpleado.Sueldo;
+    }
+
+    bool operator>(const Empleado& otroEmpleado) const {
+        return this->Sueldo > otroEmpleado.Sueldo;
+    }
+
+    void Imprime(){
+        std::cout << "Clave: " << ClaveEmpleado << std::endl;
+        std::cout << "Nombre: " << Nombre << std::endl;
+        std::cout << "Domicilio: " << Domicilio << std::endl;
+        std::cout << "Sueldo: " << Sueldo << std::endl;
+        std::cout << "Reporta a: " << ReportaA << std::endl;
+    }
+
+    void CambiaDomic(std::string UpdateDomicilio){
+        Domicilio = UpdateDomicilio;
+    }
+    
+    void CambiarReportaA(std::string UpdateReportaA){
+        ReportaA = UpdateReportaA;        
+    }
+
+    void ActualSueldo(float UpdateSueldo){
+        Sueldo += Sueldo * (UpdateSueldo / 100.0);
+            
+    }
+};
+
+int main() {
+    Empleado JefePersonal(10, "Javairo", "Jalisco 234", 33000.0, "Municipio");
+    Empleado JefePlanta(4, "Alfaro", "Andares", 55000.0, "Capital");
+
+    int opcion, ClaveEmpleado;
+    do {
+        system("cls");
+        system("Color F0");
+        std::cout << "\n\tMenu:\n";
+        std::cout << "\t1. Cambiar domicilio\n";
+        std::cout << "\t2. Actualizar sueldo\n";
+        std::cout << "\t3. Imprimir datos\n";
+        std::cout << "\t4. Cambiar Reportar a:\n";
+        std::cout << "\t5. Sueldo unidos:\n";
+        std::cout << "\t6. Comparacion de sueldos:\n";
+        std::cout << "\t0. Salir\n";
+        std::cout << "\tIngrese su opcion: ";
+        std::cin >> opcion;
+
+        switch (opcion) {
+            case 1: {
+                system("cls");
+                std::cout << "Ingrese la clave del empleado: ";
+                std::cin >> ClaveEmpleado;
+                std::cin.ignore(); 
+
+                std::string UpdateDomicilio;
+                std::cout << "Ingrese el nuevo domicilio: ";
+                std::getline(std::cin, UpdateDomicilio);
+
+                if (ClaveEmpleado == JefePlanta.getClave()) {
+                    JefePlanta.CambiaDomic(UpdateDomicilio);
+                } else if (ClaveEmpleado == JefePersonal.getClave()) {
+                    JefePersonal.CambiaDomic(UpdateDomicilio);
+                } else {
+                    std::cout << "Clave de empleado erronea o no existente.\n";
+                }
+                break;
+            }
+            case 2: {
+                system("cls");
+                std::cout << "Ingrese la clave del empleado: ";
+                std::cin >> ClaveEmpleado;
+
+                float UpdateSueldo;
+                std::cout << "Ingrese el porcentaje de incremento: ";
+                std::cin >> UpdateSueldo;
+
+                if (ClaveEmpleado == JefePlanta.getClave()) {
+                    JefePlanta.ActualSueldo(UpdateSueldo);
+                } else if (ClaveEmpleado == JefePersonal.getClave()) {
+                    JefePersonal.ActualSueldo(UpdateSueldo);
+                } else {
+                    std::cout << "Clave de empleado erronea o no existente.\n";
+                }
+                break;
+            }
+            case 3: {
+                system("cls");
+                std::cout << "Ingrese la clave del empleado: ";
+                std::cin >> ClaveEmpleado;
+
+                if (ClaveEmpleado == JefePlanta.getClave()) {
+                    JefePlanta.Imprime();
+                    system("pause");
+                } else if (ClaveEmpleado == JefePersonal.getClave()) {
+                    JefePersonal.Imprime();
+                    system("pause");
+                } else {
+                    system("cls");
+                    std::cout << "Clave de empleado erronea o no existente.\n";
+                    system("pause");
+                }
+                break;
+            }
+            case 4: {
+                system("cls");
+                std::cout << "Ingrese la clave del empleado: ";
+                std::cin >> ClaveEmpleado;
+                std::cin.ignore(); 
+
+                std::string UpdateReportaA;
+                std::cout << "Ingrese el nombre a quien reportaras: ";
+                std::getline(std::cin, UpdateReportaA);
+
+                if (ClaveEmpleado == JefePlanta.getClave()) {
+                    JefePlanta.CambiarReportaA(UpdateReportaA);
+                } else if (ClaveEmpleado == JefePersonal.getClave()) {
+                    JefePersonal.CambiarReportaA(UpdateReportaA);
+                } else {
+                    system("cls");
+                    std::cout << "Clave de empleado erronea o no existente.\n";
+                    system("pause");
+                }
+                break;
+            }
+
+            case 5: {
+                system("cls");
+
+                Empleado JefesSuma = JefePersonal + JefePlanta;
+                std::cout << "Sueldo combinado de Jefe de Personal y Jefe de Planta: " 
+                          << JefesSuma.getSueldo() << std::endl;
+                system("pause");
+                break;
+            }
+
+            case 6: { 
+                system("cls");
+                if (JefePlanta > JefePersonal) {
+                    std::cout << "El Jefe de Planta gana mas que el Jefe de Personal\n";
+                } else if (JefePlanta < JefePersonal) {
+                    std::cout << "El Jefe de Personal gana mas que el Jefe de Planta\n";
+                } else {
+                    std::cout << "El Jefe de Planta y el Jefe de Personal ganan lo mismo\n";
+                }
+                system("pause");
+                break;
+            }
+            
+            case 0:
+                std::cout << "Saliendo\n";
+                break;
+            default:
+                system("cls");
+                std::cout << "Opcion erronea o no existente.\n";
+                system("Color 4F");
+                Sleep(2500);
+        }
+
+    } while (opcion != 0);
+
+    return 0;
+}
