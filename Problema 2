@@ -1,0 +1,222 @@
+#include <iostream>
+#include <windows.h>
+#include <string>
+#include <cstdlib>
+
+class Materia {
+    private:
+    //Atributos    
+    int Clavemat;
+    std::string Nombre;
+    std::string ProfesorTit;
+    std::string LibroTexto;    
+    protected:
+    public:
+    //Metodos
+    Materia(int CM, std::string N,std::string PT,std::string LT){
+        Clavemat = CM; Nombre = N; ProfesorTit = PT; LibroTexto = LT;
+    }
+
+    void setClave(int CM){Clavemat=CM;}
+    int getClave() {return Clavemat;}
+    void SetNombre(std::string N){Nombre=N;}
+    std::string getNombre(){return Nombre;}
+    void SetProfTit(std::string PT){ProfesorTit=PT;}
+    std::string getProfTit(){return ProfesorTit;}
+    void SetLibro(std::string LT){LibroTexto=LT;}
+    std::string getLibro(){return LibroTexto;}   
+
+    //Sobrecarga << >>
+    friend std::ostream& operator<<(std::ostream& o, const Materia& M) {
+        o << "Clave de empleado: " << M.Clavemat << std::endl;
+        o << "Nombre: " << M.Nombre << std::endl;
+        o << "Profesor que imparte: " << M.ProfesorTit << std::endl;
+        o << "Libro de Texto: " << M.LibroTexto << std::endl;
+        return o;
+    }
+
+    friend std::istream& operator>>(std::istream& i, Materia& M) {
+        std::cout << "Ingrese la clave de la materia: ";
+        i >> M.Clavemat;
+        std::cout << "Ingrese el nombre del empleado: ";
+        std::getline(i, M.Nombre);
+        std::cout << "Ingrese el profesor que imparte: ";
+        std::getline(i, M.ProfesorTit);
+        std::cout << "Ingrese el libro de texto: ";
+        std::getline(i, M.LibroTexto);
+        return i;
+    }
+
+    // Sobrecarga de operadores == y != 
+    bool operator==(const Materia& otraMateria) const {
+        return this->Clavemat == otraMateria.Clavemat; 
+    }
+
+    bool operator!=(const Materia& otraMateria) const {
+        return !(*this == otraMateria); 
+    }
+
+    bool operator<(const Materia& otraMateria) const {
+        return this->Clavemat < otraMateria.Clavemat;
+    }
+
+    bool operator>(const Materia& otraMateria) const {
+        return this->Clavemat > otraMateria.Clavemat;
+    }        
+
+    void Imprime(){
+        std::cout << "Clave: " << Clavemat << std::endl;
+        std::cout << "Nombre: " << Nombre << std::endl;
+        std::cout << "Profesor: " << ProfesorTit << std::endl;
+        std::cout << "Libro de Texto: " << LibroTexto << std::endl;
+    }
+
+    void CambiaClave(int UpdateClave){
+        Clavemat = UpdateClave;
+    }
+    
+    void CambiarProfe(std::string UpdateProfesorTit){
+        ProfesorTit = UpdateProfesorTit;        
+    }
+
+};
+
+int main() {
+    Materia Programacion(13, "POO", "Lupercio","Estructuras de datos");
+    Materia BaseDatos(6,"Base de datos I", "Ruben","Bases de datos");
+
+    int opcion,opc, Clavemat;
+    do {
+        system("cls");
+        system("Color F0");
+        std::cout << "\n\tMenu:\n";
+        std::cout << "\t1. Cambiar clave de materia\n";
+        std::cout << "\t2. Cambiar maestro de materia\n";
+        std::cout << "\t3. Imprimir datos\n";
+        std::cout << "\t4. Comparar ==\n";
+        std::cout << "\t0. Salir\n";
+        std::cout << "\tIngrese su opcion: ";
+        std::cin >> opcion;
+
+        switch (opcion) {
+            case 1: {
+                system("cls");
+                std::cout << "Ingrese la clave de la materia de programacion: ";
+                std::cin >> Clavemat;
+                std::cin.ignore(); 
+
+                int UpdateClave;
+                std::cout << "Ingrese la nueva clave: ";
+                std::cin >> UpdateClave;
+
+                if (Clavemat == Programacion.getClave()) {
+                    Programacion.CambiaClave(UpdateClave);
+                        system("cls");
+                        std::cout << "Cambio realizado con exito";
+                        system("Color A4");
+                        Sleep(2500);                    
+                }  else {
+                    std::cout << "Clave de materia erronea, no existente o no pertenece a programacion.\n";
+                    system("Color 4F");
+                    Sleep(2500);
+                }
+                break;
+            }
+
+            case 2: {
+                system("cls");
+                std::cout << "Ingrese la clave de la materia de base de datos: ";
+                std::cin >> Clavemat;
+                std::cin.ignore(); 
+
+                std::string ProfesorTit;
+                std::cout << "Ingrese el maestro de la materia: ";
+                std::getline (std::cin, ProfesorTit);
+
+                std::string UpdateProfesorTit;
+                std::cout << "Ingresa el nuevo nombre del maestro: ";
+                std::getline (std::cin, UpdateProfesorTit);
+
+                if (Clavemat == BaseDatos.getClave()) {
+                    if (ProfesorTit == BaseDatos.getProfTit()) {
+                        BaseDatos.CambiarProfe(UpdateProfesorTit);
+                        system("cls");
+                        std::cout << "Cambio realizado con exito";
+                        system("Color A4");
+                        Sleep(2500);                    
+                } else {
+                    std::cout << "Maestro erroneo, no existente o no pertenece a base de datos.\n";
+                    system("Color 4F");
+                    Sleep(2500);
+                    }
+                } else {
+                    std::cout << "Clave de materia erronea\n";
+                    system("Color 4F");
+                    Sleep(2500);                    
+                }
+                break;
+            }
+
+            case 3: {
+                system("cls");
+                system("Color F0");
+                do {
+                    system("cls");
+                    system("Color F0");
+                    std::cout << "\n\tDe que materia quieres imprimir:\n";
+                    std::cout << "\t1. Programacion\n";
+                    std::cout << "\t2. Base de datos\n";
+                    std::cout << "\t3. Volver a menu principal\n";
+                    std::cout << "\tIngresa tu opcion\n";
+                    std::cin >> opc;
+
+                    switch (opc)
+                    {
+                    case 1:
+                        system("cls");
+                        Programacion.Imprime();
+                        system("pause");
+                        break;
+                    case 2:
+                        system("cls");
+                        BaseDatos.Imprime();
+                        system("pause");
+                        break;
+                    case 3:
+                        break;
+                    default:
+                            system("cls");
+                            std::cout << "Opcion erronea o no existente.\n";
+                            system("Color 4F");
+                            Sleep(2500);
+                    }
+
+                } while (opc != 0 && opc!= 3);
+            }
+        
+            case 4: { // Comparar materias (==)
+                system("cls");
+
+                if (Programacion == BaseDatos) {
+                    std::cout << "Las materias son iguales (misma clave)\n";
+                } else {
+                    std::cout << "Las materias son diferentes\n";
+                }
+
+                system("pause");
+                break;
+            }
+
+            case 0:
+                std::cout << "Saliendo\n";
+                break;
+            default:
+                system("cls");
+                std::cout << "Opcion erronea o no existente.\n";
+                system("Color 4F");
+                Sleep(2500);
+        }
+    } while (opcion != 0);
+
+    return 0;
+}
